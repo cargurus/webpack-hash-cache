@@ -1,0 +1,23 @@
+[package]
+name = "hash-cache-rs"
+version = "0.1.0"
+authors = ["cfruit <cfruit@cargurus.com>"]
+license = "MIT"
+build = "build.rs"
+edition = "2018"
+exclude = ["artifacts.json", "index.node"]
+
+[lib]
+name = "hash_cache_rs"
+crate-type = ["cdylib"]
+
+[build-dependencies]
+neon-build = "0.4.0"
+
+[dependencies]
+neon = "0.4.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+fasthash = "0.4"
+rayon = "1.1"
+jwalk = "0.5"
