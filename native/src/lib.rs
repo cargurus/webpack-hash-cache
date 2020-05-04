@@ -43,23 +43,26 @@ impl CachedFile {
         }
     }
 
-    fn update(&self) -> Option<CachedFile> {
-        if let Ok(file_metadata) = fs::metadata(&self.name) {
-            let size = file_metadata.len();
-            let modified = file_metadata.modified().unwrap();
-            if self.size != size || self.modified != modified {
-                let hash = calculate_hash(&fs::read(&self.name).unwrap());
-                if self.hash != hash {
-                    return Some(CachedFile {
-                        name: self.name.to_string(),
-                        size,
-                        modified,
-                        hash,
-                    });
-                };
+    fn was_changed(&self) -> bool {
+        match fs::metadata(&self.name) {
+            Ok(file_metadata) => {
+                let size = file_metadata.len();
+                let modified = file_metadata.modified().unwrap();
+                if self.size != size || self.modified != modified {
+                    let hash = calculate_hash(&fs::read(&self.name).unwrap());
+                    if self.hash != hash {
+                        return true;
+                    }
+                }
+            }
+            // means previously cached file cannot be read
+            // most likely due to the entrypoint of an npm module
+            // being changed.
+            Err(_) => {
+                return true;
             }
         }
-        None
+        false
     }
 }
 
@@ -77,19 +80,13 @@ impl CachedEntry {
         }
     }
 
-    fn update(&self) -> bool {
-        let changed_entries: HashSet<CachedFile> = self
-            .files
-            .borrow()
-            .iter()
-            .filter_map(|cached_file| cached_file.update())
-            .collect();
-        let was_changed = !changed_entries.is_empty();
-
-        for changed_entry in changed_entries.into_iter() {
-            self.files.borrow_mut().insert(changed_entry);
+    fn was_changed(&self) -> bool {
+        for cached_file in self.files.borrow().iter() {
+            if cached_file.was_changed() {
+                return true;
+            }
         }
-        was_changed
+        false
     }
 
     fn write(&self, cache_dir: &str) -> std::io::Result<()> {
@@ -121,11 +118,8 @@ fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsArray> {
                     let reader = BufReader::new(file);
                     let cached_entry: CachedEntry = serde_json::from_reader(reader).unwrap();
                     entries.insert(cached_entry.name.to_string());
-                    if cached_entry.update() {
+                    if cached_entry.was_changed() {
                         changed_entries.insert(cached_entry.name.to_string());
-                        cached_entry.write(&cache_dir).unwrap_or_else(|_| {
-                            panic!("Error writing cache file for: {}", cached_entry.name)
-                        });
                     }
                 }
             }
@@ -158,13 +152,6 @@ fn parse_js_entry(
         .downcast::<JsString>()
         .unwrap()
         .value();
-
-    let path = Path::new(&name);
-    // avoids rewriting an existing entry
-    // updates are handled in the get_unchanged_entries function
-    if path.exists() {
-        return None;
-    }
 
     let js_filenames: Handle<JsArray> = entry
         .get(cx, "files")
