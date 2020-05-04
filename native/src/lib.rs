@@ -104,7 +104,7 @@ struct Entries {
     files: HashSet<String>
 }
 
-fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsArray> {
+fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsValue> {
     // parse JS args
     let cache_dir: String = cx.argument::<JsString>(0)?.value();
     let cache_dir_path = Path::new(&cache_dir);
@@ -131,20 +131,13 @@ fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsArray> {
             }
         }
     } else {
-        return Ok(cx.empty_array());
+        return Ok(cx.empty_array().upcast());
     }
 
-    let unchanged_entries: HashSet<String> =
+    let unchanged_entries: Vec<String> =
         entries.difference(&changed_entries).cloned().collect();
 
-    // convert unchanged entries set to JsArray
-    let js_array = JsArray::new(&mut cx, unchanged_entries.len() as u32);
-    for (i, obj) in unchanged_entries.iter().enumerate() {
-        let js_string = cx.string(obj);
-        js_array.set(&mut cx, i as u32, js_string).unwrap();
-    }
-
-    Ok(js_array)
+    Ok(neon_serde::to_value(&mut cx, &unchanged_entries).unwrap())
 }
 
 fn parse_args(cx: &mut FunctionContext) -> (String, Vec<Entries>) {
