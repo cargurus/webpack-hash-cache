@@ -19,7 +19,10 @@ before_install:
   - npm -v
   - yarn global add yarn@latest
   - yarn
+  - rustup component add clippy-preview
 script:
+  - yarn lint
+  - (cd native && cargo clippy -- -D warnings)
   # Publish when using '[publish binary]' keywords
   - COMMIT_MESSAGE=$(git log --format=%B --no-merges -n 1 | tr -d '\n')
   - if [[ ${COMMIT_MESSAGE} =~ "[publish binary]" ]]; then yarn upload-binary || exit 0; fi;
