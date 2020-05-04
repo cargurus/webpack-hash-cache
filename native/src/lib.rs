@@ -98,6 +98,12 @@ impl CachedEntry {
     }
 }
 
+#[derive(Serialize, Deserialize)]
+struct Entries {
+    name: String,
+    files: HashSet<String>
+}
+
 fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsArray> {
     // parse JS args
     let cache_dir: String = cx.argument::<JsString>(0)?.value();
@@ -141,58 +147,19 @@ fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsArray> {
     Ok(js_array)
 }
 
-fn parse_js_entry(
-    cx: &mut FunctionContext,
-    js_entry: Handle<JsValue>,
-) -> Option<(String, HashSet<String>)> {
-    let entry: JsObject = *js_entry.downcast::<JsObject>().unwrap();
-    let name: String = entry
-        .get(cx, "name")
-        .unwrap()
-        .downcast::<JsString>()
-        .unwrap()
-        .value();
-
-    let js_filenames: Handle<JsArray> = entry
-        .get(cx, "files")
-        .unwrap()
-        .downcast::<JsArray>()
-        .unwrap();
-
-    let filenames: HashSet<String> = js_filenames
-        .to_vec(cx)
-        .unwrap()
-        .iter()
-        .map(|filename| {
-            filename
-                .downcast::<JsString>()
-                .or_throw(cx)
-                .unwrap()
-                .value()
-        })
-        .collect();
-
-    Some((name, filenames))
-}
-
-fn parse_args(cx: &mut FunctionContext) -> (String, Vec<(String, HashSet<String>)>) {
+fn parse_args(cx: &mut FunctionContext) -> (String, Vec<Entries>) {
     let cache_dir = cx.argument::<JsString>(0).unwrap().value();
 
-    let js_entries: Handle<JsArray> = cx.argument(1).unwrap();
+    let js_entries: Handle<JsValue> = cx.argument(1).unwrap();
 
-    let entries: Vec<Handle<JsValue>> = js_entries.to_vec(cx).unwrap();
+    let entries: Vec<Entries> = neon_serde::from_value(cx, js_entries).unwrap();
 
-    let cached_entries: Vec<(String, HashSet<String>)> = entries
-        .into_iter()
-        .filter_map(|entry| parse_js_entry(cx, entry))
-        .collect();
-
-    (cache_dir, cached_entries)
+    (cache_dir, entries)
 }
 
 struct BackgroundTask {
     cache_dir: String,
-    entries: Vec<(String, HashSet<String>)>,
+    entries: Vec<Entries>,
 }
 
 impl Task for BackgroundTask {
@@ -204,12 +171,13 @@ impl Task for BackgroundTask {
         let cached_entries: Vec<CachedEntry> = self
             .entries
             .par_iter()
-            .map(|(name, filenames)| {
-                let cached_files: HashSet<CachedFile> = filenames
+            .map(|entry| {
+                let cached_files: HashSet<CachedFile> = entry
+                    .files
                     .par_iter()
                     .filter_map(|filename| CachedFile::from_filename(filename))
                     .collect();
-                CachedEntry::new(name.to_string(), cached_files)
+                CachedEntry::new(entry.name.to_string(), cached_files)
             })
             .collect();
 
