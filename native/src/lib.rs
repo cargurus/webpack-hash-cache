@@ -4,7 +4,6 @@
 use neon::prelude::*;
 
 use serde::{Deserialize, Serialize};
-use std::cell::RefCell;
 use std::collections::HashSet;
 use std::fs;
 use std::hash::{Hash, Hasher};
@@ -69,19 +68,19 @@ impl CachedFile {
 #[derive(Serialize, Deserialize)]
 struct CachedEntry {
     name: String,
-    files: RefCell<HashSet<CachedFile>>,
+    files: HashSet<CachedFile>,
 }
 
 impl CachedEntry {
     fn new(name: String, files: HashSet<CachedFile>) -> CachedEntry {
         CachedEntry {
             name,
-            files: RefCell::new(files),
+            files,
         }
     }
 
     fn was_changed(&self) -> bool {
-        for cached_file in self.files.borrow().iter() {
+        for cached_file in self.files.iter() {
             if cached_file.was_changed() {
                 return true;
             }
