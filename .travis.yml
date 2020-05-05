@@ -6,8 +6,8 @@ node_js:
   - node
   - 10
 cache:
-  - yarn: true
-  - cargo: true
+  - yarn: false
+  - cargo: false
 before_install:
   # Install Rust and Cargo
   - curl https://sh.rustup.rs -sSf > /tmp/rustup.sh
