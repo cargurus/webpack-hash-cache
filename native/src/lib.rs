@@ -6,96 +6,15 @@ use neon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::fs;
-use std::hash::{Hash, Hasher};
 use std::io::BufReader;
 use std::path::Path;
-use std::time::SystemTime;
 
-use fasthash::MetroHasher;
 use jwalk::WalkDir;
 use rayon::prelude::*;
 
-#[derive(Eq, PartialEq, Hash, Serialize, Deserialize)]
-struct CachedFile {
-    name: String,
-    size: u64,
-    modified: SystemTime,
-    hash: u64,
-}
+use cache::{CachedEntry, CachedFile};
 
-impl CachedFile {
-    fn from_filename(filename: &str) -> Option<CachedFile> {
-        match fs::metadata(filename) {
-            Ok(file_metadata) => {
-                let size = file_metadata.len();
-                let modified = file_metadata.modified().unwrap();
-                // TODO: find async way to read file.
-                let hash = calculate_hash(&fs::read(filename).unwrap());
-                Some(CachedFile {
-                    name: filename.to_string(),
-                    size,
-                    modified,
-                    hash,
-                })
-            }
-            Err(_) => None,
-        }
-    }
-
-    fn was_changed(&self) -> bool {
-        match fs::metadata(&self.name) {
-            Ok(file_metadata) => {
-                let size = file_metadata.len();
-                let modified = file_metadata.modified().unwrap();
-                if self.size != size || self.modified != modified {
-                    let hash = calculate_hash(&fs::read(&self.name).unwrap());
-                    if self.hash != hash {
-                        return true;
-                    }
-                }
-            }
-            // means previously cached file cannot be read
-            // most likely due to the entrypoint of an npm module
-            // being changed.
-            Err(_) => {
-                return true;
-            }
-        }
-        false
-    }
-}
-
-#[derive(Serialize, Deserialize)]
-struct CachedEntry {
-    name: String,
-    files: HashSet<CachedFile>,
-}
-
-impl CachedEntry {
-    fn new(name: String, files: HashSet<CachedFile>) -> CachedEntry {
-        CachedEntry {
-            name,
-            files,
-        }
-    }
-
-    fn was_changed(&self) -> bool {
-        for cached_file in self.files.iter() {
-            if cached_file.was_changed() {
-                return true;
-            }
-        }
-        false
-    }
-
-    fn write(&self, cache_dir: &str) -> std::io::Result<()> {
-        let cached_entry_filename = format!("{}.json", calculate_hash(&self.name));
-        let cached_entry_path = Path::new(cache_dir).join(cached_entry_filename);
-        let f = std::io::BufWriter::new(fs::File::create(&cached_entry_path).unwrap());
-        serde_json::to_writer(f, self).unwrap();
-        Ok(())
-    }
-}
+mod cache;
 
 #[derive(Serialize, Deserialize)]
 struct Entries {
@@ -200,12 +119,6 @@ fn cache_entries(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     let background_task = BackgroundTask { cache_dir, entries };
     background_task.schedule(f);
     Ok(cx.undefined())
-}
-
-fn calculate_hash<T: Hash>(t: &T) -> u64 {
-    let mut s = MetroHasher::default();
-    t.hash(&mut s);
-    s.finish()
 }
 
 register_module!(mut m, {
