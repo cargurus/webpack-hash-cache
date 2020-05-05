@@ -9,7 +9,6 @@ use std::fs;
 use std::io;
 use std::path::Path;
 
-use jwalk::WalkDir;
 use rayon::prelude::*;
 
 use cache::{CachedEntry, CachedFile};
@@ -30,8 +29,7 @@ fn walk_dir(cache_dir_path: &Path) -> io::Result<(HashSet<String>, HashSet<Strin
     // iterate through all the cached files
     // or return empty array if cache dir doesn't exist
     if cache_dir_path.is_dir() {
-        // jwalk::{WalkDir} uses rayon to walk the directory in parallel
-        for entry in WalkDir::new(cache_dir_path).sort(false) {
+        for entry in fs::read_dir(cache_dir_path)? {
             let entry = entry?;
             let path = entry.path();
             if !path.is_dir() {
