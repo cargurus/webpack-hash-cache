@@ -3,6 +3,7 @@ use std::collections::HashSet;
 use std::hash::{Hash, Hasher};
 use std::fs;
 use std::time::SystemTime;
+use std::io;
 
 use std::path::Path;
 use fasthash::MetroHasher;
@@ -22,20 +23,21 @@ impl CachedEntry {
         }
     }
 
-    pub fn was_changed(&self) -> bool {
+    pub fn was_changed(&self) -> io::Result<bool> {
+        let mut changed = false;
         for cached_file in self.files.iter() {
-            if cached_file.was_changed() {
-                return true;
+            if cached_file.was_changed()? {
+                changed = true;
             }
         }
-        false
+        Ok(changed)
     }
 
-    pub fn write(&self, cache_dir: &str) -> std::io::Result<()> {
+    pub fn write(&self, cache_dir: &str) -> io::Result<()> {
         let cached_entry_filename = format!("{}.json", calculate_hash(&self.name));
         let cached_entry_path = Path::new(cache_dir).join(cached_entry_filename);
-        let f = std::io::BufWriter::new(fs::File::create(&cached_entry_path).unwrap());
-        serde_json::to_writer(f, self).unwrap();
+        let f = std::io::BufWriter::new(fs::File::create(&cached_entry_path)?);
+        serde_json::to_writer(f, self)?;
         Ok(())
     }
 }
@@ -49,33 +51,30 @@ pub struct CachedFile {
 }
 
 impl CachedFile {
-    pub fn from_filename(filename: &str) -> Option<CachedFile> {
-        match fs::metadata(filename) {
-            Ok(file_metadata) => {
-                let size = file_metadata.len();
-                let modified = file_metadata.modified().unwrap();
-                // TODO: find async way to read file.
-                let hash = calculate_hash(&fs::read(filename).unwrap());
-                Some(CachedFile {
-                    name: filename.to_string(),
-                    size,
-                    modified,
-                    hash,
-                })
-            }
-            Err(_) => None,
-        }
+    pub fn from_filename(filename: &str) -> io::Result<CachedFile> {
+        let file_metadata = fs::metadata(filename)?;
+        let size = file_metadata.len();
+        let modified = file_metadata.modified()?;
+        // TODO: find async way to read file.
+        let hash = calculate_hash(&fs::read(filename)?);
+        Ok(CachedFile {
+            name: filename.to_string(),
+            size,
+            modified,
+            hash,
+        })
     }
 
-    pub fn was_changed(&self) -> bool {
+    pub fn was_changed(&self) -> io::Result<bool> {
+        let mut changed = false;
         match fs::metadata(&self.name) {
             Ok(file_metadata) => {
                 let size = file_metadata.len();
-                let modified = file_metadata.modified().unwrap();
+                let modified = file_metadata.modified()?;
                 if self.size != size || self.modified != modified {
-                    let hash = calculate_hash(&fs::read(&self.name).unwrap());
+                    let hash = calculate_hash(&fs::read(&self.name)?);
                     if self.hash != hash {
-                        return true;
+                        changed = true;
                     }
                 }
             }
@@ -83,10 +82,10 @@ impl CachedFile {
             // most likely due to the entrypoint of an npm module
             // being changed.
             Err(_) => {
-                return true;
+                changed = true;
             }
         }
-        false
+        Ok(changed)
     }
 }
 

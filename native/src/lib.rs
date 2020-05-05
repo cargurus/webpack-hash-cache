@@ -6,7 +6,7 @@ use neon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::fs;
-use std::io::BufReader;
+use std::io;
 use std::path::Path;
 
 use jwalk::WalkDir;
@@ -22,50 +22,48 @@ struct Entries {
     files: HashSet<String>
 }
 
-fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsValue> {
-    // parse JS args
-    let cache_dir: String = cx.argument::<JsString>(0)?.value();
-    let cache_dir_path = Path::new(&cache_dir);
-    // track entries and changed entries, and return the difference.
+fn walk_dir(cache_dir_path: &Path) -> io::Result<(HashSet<String>, HashSet<String>)> {
+    // iterate through all the cached files
+    // or return empty array if cache dir doesn't exist
     let mut entries: HashSet<String> = HashSet::new();
     let mut changed_entries: HashSet<String> = HashSet::new();
-
     // iterate through all the cached files
     // or return empty array if cache dir doesn't exist
     if cache_dir_path.is_dir() {
         // jwalk::{WalkDir} uses rayon to walk the directory in parallel
         for entry in WalkDir::new(cache_dir_path).sort(false) {
-            let entry = entry.unwrap();
+            let entry = entry?;
             let path = entry.path();
             if !path.is_dir() {
                 if let Ok(file) = fs::File::open(&path) {
-                    let reader = BufReader::new(file);
-                    let cached_entry: CachedEntry = serde_json::from_reader(reader).unwrap();
+                    let reader = io::BufReader::new(file);
+                    let cached_entry: CachedEntry = serde_json::from_reader(reader)?;
                     entries.insert(cached_entry.name.to_string());
-                    if cached_entry.was_changed() {
+                    if cached_entry.was_changed()? {
                         changed_entries.insert(cached_entry.name.to_string());
                     }
                 }
             }
         }
-    } else {
-        return Ok(cx.empty_array().upcast());
     }
+    Ok((changed_entries, entries))
+}
+
+fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsValue> {
+    // parse JS args
+    let cache_dir: String = cx.argument::<JsString>(0)?.value();
+    let cache_dir_path = Path::new(&cache_dir);
+    // track entries and changed entries, and return the difference.
+
+
+    // iterate through all the cached files
+    // or return empty array if cache dir doesn't exist
+    let (changed_entries, entries) = walk_dir(&cache_dir_path).unwrap();
 
     let unchanged_entries: Vec<String> =
         entries.difference(&changed_entries).cloned().collect();
 
-    Ok(neon_serde::to_value(&mut cx, &unchanged_entries).unwrap())
-}
-
-fn parse_args(cx: &mut FunctionContext) -> (String, Vec<Entries>) {
-    let cache_dir = cx.argument::<JsString>(0).unwrap().value();
-
-    let js_entries: Handle<JsValue> = cx.argument(1).unwrap();
-
-    let entries: Vec<Entries> = neon_serde::from_value(cx, js_entries).unwrap();
-
-    (cache_dir, entries)
+    Ok(neon_serde::to_value(&mut cx, &unchanged_entries)?)
 }
 
 struct BackgroundTask {
@@ -86,7 +84,8 @@ impl Task for BackgroundTask {
                 let cached_files: HashSet<CachedFile> = entry
                     .files
                     .par_iter()
-                    .filter_map(|filename| CachedFile::from_filename(filename))
+                    .map(|filename| CachedFile::from_filename(filename))
+                    .filter_map(Result::ok)
                     .collect();
                 CachedEntry::new(entry.name.to_string(), cached_files)
             })
@@ -114,9 +113,16 @@ impl Task for BackgroundTask {
 
 // so JS can call it asynchronously
 fn cache_entries(mut cx: FunctionContext) -> JsResult<JsUndefined> {
-    let (cache_dir, entries) = parse_args(&mut cx);
+    let cache_dir = cx.argument::<JsString>(0)?.value();
+
+    let js_entries: Handle<JsValue> = cx.argument(1)?;
+
+    let entries: Vec<Entries> = neon_serde::from_value(&mut cx, js_entries)?;
+
     let f = cx.argument::<JsFunction>(2)?;
+
     let background_task = BackgroundTask { cache_dir, entries };
+
     background_task.schedule(f);
     Ok(cx.undefined())
 }
