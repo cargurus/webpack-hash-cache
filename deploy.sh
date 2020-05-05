@@ -2,7 +2,8 @@
 
 COMMIT_MESSAGE=$(git log --format=%B --no-merges -n 1 | tr -d '\n')
 if [[ ${COMMIT_MESSAGE} =~ "[publish binary]" ]]
-    then 
+    then
+        yarn install
         yarn upload-binary
         yarn publish
     else
