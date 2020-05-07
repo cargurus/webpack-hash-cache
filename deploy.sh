@@ -5,6 +5,7 @@ if [[ ${COMMIT_MESSAGE} =~ "[publish binary]" ]]
     then
         yarn
         yarn upload-binary
+        yarn publish
     else
         echo "skipping publish";
         exit 0;
