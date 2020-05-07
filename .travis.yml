@@ -25,8 +25,6 @@ script:
 before_deploy:
   provider: script
   script: bash ./deploy.sh
-  before_deploy:
-  - cd dist
 deploy:
   provider: npm
   email: tommy@terribledev.io
