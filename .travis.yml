@@ -18,7 +18,6 @@ before_install:
   - node -v
   - npm -v
   - yarn global add yarn@latest
-  - yarn
   - rustup component add clippy-preview
   - yarn lint
   - yarn test
