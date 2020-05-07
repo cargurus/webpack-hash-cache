@@ -23,9 +23,7 @@ before_install:
 - pushd native
 - "(cargo clippy -- -D warnings)"
 - popd
-before_deploy:
-  provider: script
-  script: ls && exit 1
+- bash ./deploy.sh
 deploy:
   provider: npm
   email: tommy@terribledev.io
