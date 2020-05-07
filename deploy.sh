@@ -5,6 +5,7 @@ if [[ ${COMMIT_MESSAGE} =~ "[publish binary]" ]]
     then
         echo -e "\n_authToken=${NPM_TOKEN}" >> .npmrc
         yarn upload-binary
+        yarn publish
         git checkout .npmrc
     else
         echo "skipping publish";
