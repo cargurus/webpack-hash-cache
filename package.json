@@ -20,12 +20,11 @@
     "util": "^0.12.3"
   },
   "scripts": {
-    "build-release": "neon build --release",
     "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "lint": "eslint .",
     "package": "node-pre-gyp package",
     "test": "exit 0",
-    "upload-binary": "yarn build-release && node-pre-gyp package && node-pre-gyp-github publish"
+    "upload-binary": "node-pre-gyp package && node-pre-gyp-github publish"
   },
   "binary": {
     "module_name": "index",
