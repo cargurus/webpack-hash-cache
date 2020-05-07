@@ -1,31 +1,38 @@
 os:
-  - osx
-  - linux
+- osx
+- linux
 language: node_js
 node_js:
-  - node
-  - 10
+- node
+- 10
 cache:
-  - yarn: false
-  - cargo: false
+- yarn: false
+- cargo: false
 before_install:
-  # Install Rust and Cargo
-  - curl https://sh.rustup.rs -sSf > /tmp/rustup.sh
-  - sh /tmp/rustup.sh -y
-  - export PATH="$HOME/.cargo/bin:$PATH"
-  - source "$HOME/.cargo/env"
-  # Install NPM packages
-  - node -v
-  - npm -v
-  - yarn global add yarn@latest
-  - yarn
-  - rustup component add clippy-preview
+- curl https://sh.rustup.rs -sSf > /tmp/rustup.sh
+- sh /tmp/rustup.sh -y
+- export PATH="$HOME/.cargo/bin:$PATH"
+- source "$HOME/.cargo/env"
+- node -v
+- npm -v
+- yarn global add yarn@latest
+- yarn
+- rustup component add clippy-preview
 script:
-    - yarn lint
-    - yarn test
-    - (cd native && cargo clippy -- -D warnings)
-deploy:
+- yarn lint
+- yarn test
+- "(cd native && cargo clippy -- -D warnings)"
+before_deploy:
   provider: script
   script: bash ./deploy.sh
+  before_deploy:
+  - cd dist
+deploy:
+  provider: npm
+  email: tommy@terribledev.io
+  api_key:
+    secure: fQtZgtzBXvbX0dXs+ySr9Jm2tSbJa/vdkFsBgQ40srWVtuB7fBOOeHNIgY0Yyn+kCDOCsmT4sKvxArqQjVYJP92aphVkFCfxVM5DDYNlT0Tjj0ZFPinIDOrjUyftXZmz2qyLN/+QzqNVUtytfc0P4yyjRWSo8EWDptYtX47rfkz8SDzFXKNS39EQ4pXzKROXOicbWri/1i6aEkbjgpQS6Yy0970A9fGXaDmmlN+WgE0TwjaK8wvEpdWJlK/TE1bAFuf+3QP6ei7LxeIL4troSrHhra+Cowz65ZjiHZSCX6MjW/lDr4COCHYwCZIH7npLo7FV65+lBusKPz0Mq9de18Xd3Gm8+WqO7LuFFv5GCLOKOOI9OQrQqGriQAwMWocX1C3btr6tWGQAbbWjSCBEQqLphDBDbL3kEvi810pOrBv8BNkn7L/qtyVteEUMlS6F+maAdUMghJhUfOP2+A5TvtkYSq1R4bHlwj1SJbNFs6zIln73cHr7HvDT/9DwJQ1Q469TLp6Iy37lvKAJXdtREpyDLuAv4CbWc1V9nOeY7pK59cs9HpcRyKiQY+rGmCrf24g3s/8PD89umpHE0jE6g9+rNbGvbPkKOpLTo1RHlkHGYVnNlAlw9ecHtjcRLXYa15QLYzDHFrUoewatKpGWMV2kyIGQNbvyzTd6hXK4IHY=
   on:
+    repo: cargurus/webpack-hash-cache
     branch: master
+    condition: ${COMMIT_MESSAGE} =~ "[publish binary]"
