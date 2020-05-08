@@ -1,6 +1,6 @@
 {
   "name": "webpack-hash-cache",
-  "version": "0.3.7",
+  "version": "0.3.5",
   "description": "An experimental incremental build plugin for Webpack.",
   "main": "lib/index.js",
   "author": "cfruit <cfruit@cargurus.com>",
@@ -14,7 +14,7 @@
     "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
-    "neon-cli": "^0.4.0",
+    "neon-cli": "matrix-org/neon",
     "node-pre-gyp": "amilajack/node-pre-gyp#neon-compat",
     "node-pre-gyp-github": "^1.4.3",
     "util": "^0.12.3"
@@ -40,6 +40,7 @@
     "url": "git+https://github.com/cargurus/webpack-hash-cache.git"
   },
   "files": [
+    "native/index.node",
     "lib"
   ]
 }
