@@ -1,6 +1,6 @@
 {
   "name": "webpack-hash-cache",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "An experimental incremental build plugin for Webpack.",
   "main": "lib/index.js",
   "author": "cfruit <cfruit@cargurus.com>",
@@ -40,7 +40,6 @@
     "url": "git+https://github.com/cargurus/webpack-hash-cache.git"
   },
   "files": [
-    "native/index.node",
     "lib"
   ]
 }
