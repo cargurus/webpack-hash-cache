@@ -6,6 +6,7 @@ if [[ ${COMMIT_MESSAGE} =~ "[publish binary]" ]]
         yarn
         echo -e "\n_authToken=${NPM_TOKEN}" >> .npmrc
         yarn upload-binary
+        yarn clean
 	      npm publish
         git checkout .npmrc
     else
