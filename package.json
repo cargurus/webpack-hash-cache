@@ -1,6 +1,6 @@
 {
   "name": "webpack-hash-cache",
-  "version": "0.3.1",
+  "version": "0.3.5",
   "description": "An experimental incremental build plugin for Webpack.",
   "main": "lib/index.js",
   "author": "cfruit <cfruit@cargurus.com>",
@@ -20,11 +20,12 @@
     "util": "^0.12.3"
   },
   "scripts": {
+    "build-release": "neon build --release",
     "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "lint": "eslint .",
     "package": "node-pre-gyp package",
     "test": "exit 0",
-    "upload-binary": "node-pre-gyp package && node-pre-gyp-github publish"
+    "upload-binary": "yarn build-release && node-pre-gyp package && node-pre-gyp-github publish"
   },
   "binary": {
     "module_name": "index",
