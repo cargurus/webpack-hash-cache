@@ -21,11 +21,13 @@ before_install:
   - npm -v
   - yarn global add yarn@latest
   - rustup component add clippy-preview
+script:
   - yarn lint
   - yarn test
   - (cd native && cargo clippy -- -D warnings)
 deploy:
   provider: script
   script: bash ./deploy.sh
+  skip_cleanup: true
   on:
     branch: master
