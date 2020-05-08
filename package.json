@@ -14,8 +14,8 @@
     "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
-    "neon-cli": "matrix-org/neon",
-    "node-pre-gyp": "amilajack/node-pre-gyp#neon-compat",
+    "neon-cli": "github:matrix-org/neon",
+    "node-pre-gyp": "github:amilajack/node-pre-gyp#neon-compat",
     "node-pre-gyp-github": "^1.4.3",
     "util": "^0.12.3"
   },
