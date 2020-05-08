@@ -40,7 +40,6 @@
     "url": "git+https://github.com/cargurus/webpack-hash-cache.git"
   },
   "files": [
-    "native/index.node",
     "lib"
   ]
 }
