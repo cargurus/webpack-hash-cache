@@ -2,7 +2,6 @@ os:
   - osx
 language: node_js
 node_js:
-  - node
   - 10
 cache:
   - yarn: false
