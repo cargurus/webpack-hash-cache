@@ -56,7 +56,7 @@ fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsValue> {
 
     // iterate through all the cached files
     // or return empty array if cache dir doesn't exist
-    let (changed_entries, entries) = walk_dir(&cache_dir_path).unwrap();
+    let (changed_entries, entries) = walk_dir(cache_dir_path).unwrap();
 
     let unchanged_entries: Vec<String> =
         entries.difference(&changed_entries).cloned().collect();
