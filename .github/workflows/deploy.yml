@@ -30,4 +30,12 @@ jobs:
       run: yarn run upload-binary
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+    - name: install mac arm toolchain
+      f: ${{ matrix.os == 'macos-11'}}
+      run: rustup target add aarch64-apple-darwin
+    - name: upload mac arm binary
+      if: ${{ matrix.os == 'macos-11'}}
+      run: SDKROOT=$(xcrun -sdk macosx --show-sdk-path) MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx --show-sdk-platform-version) CARGO_BUILD_TARGET=aarch64-apple-darwin yarn publish-binary
+      env:
+        NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
