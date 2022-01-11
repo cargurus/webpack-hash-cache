@@ -9,9 +9,9 @@ jobs:
   deploy:
     strategy:
       matrix:
-        os: [ubuntu-18.04]
         node-version: [10.x]
         rust-toolchain: [stable]
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
