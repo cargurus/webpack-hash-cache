@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "neon-cli": "^0.4.0",
-    "node-pre-gyp": "amilajack/node-pre-gyp#neon-compat",
-    "node-pre-gyp-github": "^1.4.3",
+    "node-pre-gyp": "1.0.8",
+    "@mmomtchev/node-pre-gyp-github": "2.0.6",
     "util": "^0.12.3"
   },
   "scripts": {
@@ -26,7 +26,7 @@
     "lint": "eslint .",
     "package": "node-pre-gyp package",
     "test": "exit 0",
-    "upload-binary": "yarn build-release && node-pre-gyp package && node-pre-gyp-github publish --release"
+    "upload-binary": "yarn build-release && node-pre-gyp package && @mmomtchev/node-pre-gyp-github publish --release"
   },
   "binary": {
     "module_name": "index",
