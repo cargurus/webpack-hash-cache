@@ -33,7 +33,7 @@ jobs:
     - name: upload binary
       run: npm upload-binary
     - name: clean
-        run: npm clean
+      run: npm clean
     - name: publish
       run: npm publish
       env:
