@@ -22,7 +22,7 @@
   "scripts": {
     "build-release": "neon build --release",
     "clean": "neon clean",
-    "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
+    "install": "node-pre-gyp install --fallback-to-build=true || neon build --release",
     "lint": "eslint .",
     "package": "node-pre-gyp package",
     "test": "exit 0",
