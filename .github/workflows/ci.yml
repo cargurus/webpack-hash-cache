@@ -7,12 +7,10 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [12.x, 14.x]
         rust-toolchain: [stable]
 
     steps:
@@ -25,9 +23,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    # - name: install clippy
-    #   run: rustup component add clippy-preview
-    - name: clippy
-      run: (cd native && cargo clippy -- -D warnings)
     - name: install
       run: npm install
+    - name: test
+      run: npm test
+    - name: clippy
+      run: (cd native && cargo clippy -- -D warnings)
