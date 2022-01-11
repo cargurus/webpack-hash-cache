@@ -14,7 +14,7 @@
     "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
-    "neon-cli": "^0.4.0",
+    "neon-cli": "^0.8.0",
     "@mapbox/node-pre-gyp": "1.0.8",
     "@mmomtchev/node-pre-gyp-github": "2.0.6",
     "util": "^0.12.3"

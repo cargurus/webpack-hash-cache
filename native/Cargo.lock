@@ -178,7 +178,7 @@ dependencies = [
  "fasthash",
  "neon",
  "neon-build",
- "neon-serde",
+ "neon-serde2",
  "rayon",
  "serde",
  "serde_json",
@@ -212,6 +212,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b03d17f364a3a042d5e5d46b053bbbf82c92c9430c592dd4c064dc6ee997125"
 
 [[package]]
+name = "libloading"
+version = "0.6.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "351a32417a12d5f7e82c368a66781e307834dae04c6ce0cd4456d52989229883"
+dependencies = [
+ "cfg-if 1.0.0",
+ "winapi",
+]
+
+[[package]]
 name = "memchr"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -238,53 +248,66 @@ dependencies = [
 
 [[package]]
 name = "neon"
-version = "0.4.0"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6cac4691701b686e6c07b2eb5b51a9f26f5c11179c5d7924b78100dd387fc99d"
+checksum = "05c562b89fa7f9707f02056abe25a37ec290ca4a4f1596edbd7aa1aa7b87af1d"
 dependencies = [
  "cslice",
  "neon-build",
+ "neon-macros",
  "neon-runtime",
  "semver",
+ "smallvec",
 ]
 
 [[package]]
 name = "neon-build"
-version = "0.4.0"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9ed332afd4711b84f4f83d334428a1fd9ce53620b62b87595934297c5ede2ed"
+checksum = "f9c55f6d310757b9fe6cd96a376609548a252da31828f935a7f59106533a89e9"
 dependencies = [
- "cfg-if 0.1.10",
  "neon-sys",
+]
+
+[[package]]
+name = "neon-macros"
+version = "0.8.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47065bc93b16f41fcfe29cad7d4d2a3e299b4389a3c9b429ba7a55f69a057fff"
+dependencies = [
+ "quote",
+ "syn",
 ]
 
 [[package]]
 name = "neon-runtime"
-version = "0.4.0"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2beea093a60c08463f65e1da4cda68149986f60d8d2177489b44589463c782a6"
+checksum = "be313e6cf11f469653ee1b137b9203f5d604f2b496d423e96c5e251b51eead03"
 dependencies = [
- "cfg-if 0.1.10",
+ "cfg-if 1.0.0",
+ "libloading",
  "neon-sys",
+ "smallvec",
 ]
 
 [[package]]
-name = "neon-serde"
-version = "0.4.0"
-source = "git+https://github.com/GabrielCastro/neon-serde?branch=master#06a54a3d48d6d1ec66e5056a955147af8f99cc44"
+name = "neon-serde2"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "45f71398df9759a24867086aac5dd7ae523c91757815c27f376126d9c9d37a73"
 dependencies = [
  "error-chain",
  "neon",
- "neon-runtime",
  "num",
  "serde",
 ]
 
 [[package]]
 name = "neon-sys"
-version = "0.4.0"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69a6c1ba6b926746f4d3f596de18ce49d062d78fd9f35f636080232aa77a0e16"
+checksum = "fe7311a8aca212437bb95c4e5eb94b19a4c360440db118021cd90c3d63387613"
 dependencies = [
  "cc",
  "regex",
@@ -292,9 +315,9 @@ dependencies = [
 
 [[package]]
 name = "num"
-version = "0.2.1"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b8536030f9fea7127f841b45bb6243b27255787fb4eb83958aa1ef9d2fdc0c36"
+checksum = "43db66d1170d347f9a065114077f7dccb00c1b9478c89384490a3425279a4606"
 dependencies = [
  "num-complex",
  "num-integer",
@@ -305,11 +328,10 @@ dependencies = [
 
 [[package]]
 name = "num-complex"
-version = "0.2.4"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6b19411a9719e753aff12e5187b74d60d3dc449ec3f4dc21e3989c3f554bc95"
+checksum = "26873667bbbb7c5182d4a37c1add32cdf09f841af72da53318fdb81543c15085"
 dependencies = [
- "autocfg",
  "num-traits",
 ]
 
@@ -336,9 +358,9 @@ dependencies = [
 
 [[package]]
 name = "num-rational"
-version = "0.2.4"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c000134b5dbf44adc5cb772486d335293351644b801551abe8f75c84cfa4aef"
+checksum = "d41702bd167c2df5520b384281bc111a4b5efcf7fbc4c9c222c815b07e0a6a6a"
 dependencies = [
  "autocfg",
  "num-integer",
@@ -539,6 +561,12 @@ dependencies = [
  "ryu",
  "serde",
 ]
+
+[[package]]
+name = "smallvec"
+version = "1.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1ecab6c735a6bb4139c0caafd0cc3635748bbb3acf4550e8138122099251f309"
 
 [[package]]
 name = "syn"

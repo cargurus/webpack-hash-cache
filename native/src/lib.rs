@@ -61,7 +61,7 @@ fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsValue> {
     let unchanged_entries: Vec<String> =
         entries.difference(&changed_entries).cloned().collect();
 
-    Ok(neon_serde::to_value(&mut cx, &unchanged_entries)?)
+    Ok(neon_serde2::to_value(&mut cx, &unchanged_entries)?)
 }
 
 struct BackgroundTask {
@@ -115,7 +115,7 @@ fn cache_entries(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
     let js_entries: Handle<JsValue> = cx.argument(1)?;
 
-    let entries: Vec<Entries> = neon_serde::from_value(&mut cx, js_entries)?;
+    let entries: Vec<Entries> = neon_serde2::from_value(&mut cx, js_entries)?;
 
     let f = cx.argument::<JsFunction>(2)?;
 
