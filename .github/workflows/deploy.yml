@@ -33,12 +33,21 @@ jobs:
     - name: install mac arm toolchain
       if: ${{ matrix.os == 'macos-11'}}
       run: rustup target add aarch64-apple-darwin
-    - name: install xcode 1
-      if: ${{ matrix.os == 'macos-11'}}
-      run: sudo xcode-select -s "/Applications/Xcode_13.2.1.app"
-    - name: rm cli xcode tools
-      if: ${{ matrix.os == 'macos-11'}}
-      run: sudo rm -Rf /Library/Developer/CommandLineTools/SDKs/*
+    - run: xcodebuild -showsdks
+
+    # Remove Xcode Command Line Tools so old version can not be used in build via https://github.com/prisma/prisma/issues/5245#issuecomment-864356168
+    - run: sudo rm -Rf /Library/Developer/CommandLineTools/SDKs/*;
+
+    # Activate newest available Xcode
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+
+    # Build with fancy params via https://github.com/shepmaster/rust/blob/silicon/silicon/README.md
+    - run: |
+        SDKROOT=$(xcrun -sdk macosx11.1 --show-sdk-path)
+        MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx11.1 --show-sdk-platform-version)
+      
     - name: upload mac arm binary
       if: ${{ matrix.os == 'macos-11'}}
       run: CARGO_BUILD_TARGET=aarch64-apple-darwin yarn run upload-binary
