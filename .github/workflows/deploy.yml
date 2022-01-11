@@ -30,8 +30,12 @@ jobs:
       run: npm test
     - name: clippy
       run: (cd native && cargo clippy -- -D warnings)
-    - name: deploy
-      run: 
-        # run script
-        "${GITHUB_WORKSPACE}/deploy.sh"
+    - name: upload binary
+      run: npm upload-binary
+    - name: clean
+        run: npm clean
+    - name: publish
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   
