@@ -39,8 +39,4 @@ jobs:
       run: yarn run upload-binary
       env:
         CARGO_BUILD_TARGET: aarch64-apple-darwin
-        RUSTFLAGS: [
-          "-C", "link-arg=-undefined",
-          "-C", "link-arg=dynamic_lookup",
-        ]
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
