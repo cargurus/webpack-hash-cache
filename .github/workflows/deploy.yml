@@ -33,7 +33,11 @@ jobs:
     - name: install mac arm toolchain
       if: ${{ matrix.os == 'macos-11'}}
       run: rustup target add aarch64-apple-darwin
+    - name: install xcode 12.3
+      if: ${{ matrix.os == 'macos-11'}}
       run: sudo xcode-select -s "/Applications/Xcode_12.3.app"
+    - name: rm cli xcode tools
+      if: ${{ matrix.os == 'macos-11'}}
       run: sudo rm -Rf /Library/Developer/CommandLineTools/SDKs/*
     - name: upload mac arm binary
       if: ${{ matrix.os == 'macos-11'}}
