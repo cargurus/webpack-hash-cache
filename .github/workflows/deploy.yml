@@ -33,8 +33,10 @@ jobs:
     - name: install mac arm toolchain
       if: ${{ matrix.os == 'macos-11'}}
       run: rustup target add aarch64-apple-darwin
+      run: sudo xcode-select -s "/Applications/Xcode_12.3.app"
+      run: sudo rm -Rf /Library/Developer/CommandLineTools/SDKs/*
     - name: upload mac arm binary
       if: ${{ matrix.os == 'macos-11'}}
-      run: SDKROOT=$(xcrun -sdk macosx --show-sdk-path) MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx --show-sdk-platform-version) CARGO_BUILD_TARGET=aarch64-apple-darwin yarn run upload-binary
+      run: CARGO_BUILD_TARGET=aarch64-apple-darwin yarn run upload-binary
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
