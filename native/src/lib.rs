@@ -8,7 +8,6 @@ use std::collections::HashSet;
 use std::fs;
 use std::io;
 use std::path::Path;
-use neon_serde3;
 use rayon::prelude::*;
 
 use cache::{CachedEntry, CachedFile};
