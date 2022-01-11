@@ -27,6 +27,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - uses: borales/actions-yarn@v2.3.0
       with:
+        node-version: ${{ matrix.node-version }}
         cmd: install
     - uses: borales/actions-yarn@v2.3.0
       with:
@@ -39,4 +40,4 @@ jobs:
     - name: clippy
       run: (cd native && cargo clippy -- -D warnings)
     - name: eslint
-      run: yarn lint
+      run: npm
