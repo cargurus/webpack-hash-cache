@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+        rust-toolchain: [stable]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Rust ${{ matrix.rust-toolchain }}
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust-toolchain }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: install
+    - uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: lint
+    - uses: borales/actions-yarn@v2.3.0
+      with:
+        cmd: test
+    # - name: install clippy
+    #   run: rustup component add clippy-preview
+    - name: clippy
+      run: (cd native && cargo clippy -- -D warnings)
+    - name: eslint
+      run: yarn lint
