@@ -1,0 +1,36 @@
+name: DEPLOY
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  deploy:
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+        node-version: [10.x]
+        rust-toolchain: [stable]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Rust ${{ matrix.rust-toolchain }}
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust-toolchain }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: install
+      run: npm install
+    - name: test
+      run: npm test
+    - name: clippy
+      run: (cd native && cargo clippy -- -D warnings)
+    - name: deploy
+      run: 
+        # run script
+        "${GITHUB_WORKSPACE}/deploy.sh"
+  
