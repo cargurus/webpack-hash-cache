@@ -25,15 +25,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: install
-      run: npm install
+      run: yarn install
     - name: test
-      run: npm test
+      run: yarn test
     - name: clippy
       run: (cd native && cargo clippy -- -D warnings)
     - name: upload binary
-      run: npm run upload-binary
-    # - name: clean
-    #   run: npm clean
+      run: yarn run upload-binary
     - name: publish
       run: npm publish
       env:
