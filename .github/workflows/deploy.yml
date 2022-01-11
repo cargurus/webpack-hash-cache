@@ -31,6 +31,6 @@ jobs:
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
   
