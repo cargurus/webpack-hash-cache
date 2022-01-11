@@ -8,7 +8,6 @@ use std::collections::HashSet;
 use std::fs;
 use std::io;
 use std::path::Path;
-
 use rayon::prelude::*;
 
 use cache::{CachedEntry, CachedFile};
@@ -49,7 +48,7 @@ fn walk_dir(cache_dir_path: &Path) -> io::Result<(HashSet<String>, HashSet<Strin
 
 fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsValue> {
     // parse JS args
-    let cache_dir: String = cx.argument::<JsString>(0)?.value();
+    let cache_dir: String = cx.argument::<JsString>(0)?.value(&mut cx);
     let cache_dir_path = Path::new(&cache_dir);
     // track entries and changed entries, and return the difference.
 
@@ -61,67 +60,41 @@ fn get_unchanged_entries(mut cx: FunctionContext) -> JsResult<JsValue> {
     let unchanged_entries: Vec<String> =
         entries.difference(&changed_entries).cloned().collect();
 
-    Ok(neon_serde::to_value(&mut cx, &unchanged_entries)?)
-}
-
-struct BackgroundTask {
-    cache_dir: String,
-    entries: Vec<Entries>,
-}
-
-impl Task for BackgroundTask {
-    type Output = ();
-    type Error = String;
-    type JsEvent = JsUndefined;
-
-    fn perform(&self) -> Result<(), Self::Error> {
-        let cached_entries: Vec<CachedEntry> = self
-            .entries
-            .par_iter()
-            .map(|entry| {
-                let cached_files: HashSet<CachedFile> = entry
-                    .files
-                    .par_iter()
-                    .map(|filename| CachedFile::from_filename(filename))
-                    .filter_map(Result::ok)
-                    .collect();
-                CachedEntry::new(entry.name.to_string(), cached_files)
-            })
-            .collect();
-
-        // ensure directory exists.
-        fs::create_dir_all(&self.cache_dir)
-            .unwrap_or_else(|_| panic!("Error creating cache directory: {}", self.cache_dir));
-
-        for cached_entry in cached_entries.iter() {
-            cached_entry
-                .write(&self.cache_dir)
-                .unwrap_or_else(|_| panic!("Error writing cache file for: {}", cached_entry.name));
-        }
-        Ok(())
-    }
-    fn complete(
-        self,
-        mut cx: TaskContext,
-        _result: Result<Self::Output, Self::Error>,
-    ) -> JsResult<Self::JsEvent> {
-        Ok(cx.undefined())
-    }
+    Ok(neon_serde3::to_value(&mut cx, &unchanged_entries).unwrap())
 }
 
 // so JS can call it asynchronously
 fn cache_entries(mut cx: FunctionContext) -> JsResult<JsUndefined> {
-    let cache_dir = cx.argument::<JsString>(0)?.value();
+    let cache_dir = cx.argument::<JsString>(0)?.value(&mut cx);
 
     let js_entries: Handle<JsValue> = cx.argument(1)?;
 
-    let entries: Vec<Entries> = neon_serde::from_value(&mut cx, js_entries)?;
+    let entries: Vec<Entries> = neon_serde3::from_value(&mut cx, js_entries).unwrap();
 
-    let f = cx.argument::<JsFunction>(2)?;
+    let _f = cx.argument::<JsFunction>(2)?;
 
-    let background_task = BackgroundTask { cache_dir, entries };
+    let cached_entries: Vec<CachedEntry> = entries
+        .par_iter()
+        .map(|entry| {
+            let cached_files: HashSet<CachedFile> = entry
+                .files
+                .par_iter()
+                .map(|filename| CachedFile::from_filename(filename))
+                .filter_map(Result::ok)
+                .collect();
+            CachedEntry::new(entry.name.to_string(), cached_files)
+        })
+        .collect();
 
-    background_task.schedule(f);
+    // ensure directory exists.
+    fs::create_dir_all(&cache_dir)
+        .unwrap_or_else(|_| panic!("Error creating cache directory: {}", cache_dir));
+
+    for cached_entry in cached_entries.iter() {
+        cached_entry
+            .write(&cache_dir)
+            .unwrap_or_else(|_| panic!("Error writing cache file for: {}", cached_entry.name));
+    }
     Ok(cx.undefined())
 }
 

@@ -1,4 +1,4 @@
-name: DEPLOY
+name: PUBLISH
 
 on:
   pull_request:
@@ -6,12 +6,12 @@ on:
       - master
 
 jobs:
-  deploy:
+  publish:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [16.x]
         rust-toolchain: [stable]
 
     steps:
@@ -26,8 +26,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: install
       run: yarn install
-    - name: upload binary
-      run: yarn run upload-binary
-      env:
-        NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+    - uses: JS-DevTools/npm-publish@v1
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
