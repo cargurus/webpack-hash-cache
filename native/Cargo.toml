@@ -12,12 +12,16 @@ name = "hash_cache_rs"
 crate-type = ["cdylib"]
 
 [build-dependencies]
-neon-build = "0.8.0"
+neon-build = "0.9.1"
+
+[dependencies.neon]
+version = "0.9.1"
+default-features = false
+features = ["napi-4"]
 
 [dependencies]
-neon = "0.8.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 fasthash = "0.4"
 rayon = "1.1"
-neon-serde2 = "0.8.0"
+neon-serde3 = { git = "https://github.com/colinfruit/neon-serde", branch = "master" }
