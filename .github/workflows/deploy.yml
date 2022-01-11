@@ -26,10 +26,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: install
       run: yarn install
-    - name: test
-      run: yarn test
-    - name: clippy
-      run: (cd native && cargo clippy -- -D warnings)
     - name: upload binary
       run: yarn run upload-binary
       env:
