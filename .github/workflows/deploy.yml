@@ -32,6 +32,8 @@ jobs:
       run: (cd native && cargo clippy -- -D warnings)
     - name: upload binary
       run: yarn run upload-binary
+      env:
+        NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: publish
       run: npm publish
       env:
