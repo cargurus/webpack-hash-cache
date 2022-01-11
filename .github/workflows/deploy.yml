@@ -7,11 +7,12 @@ on:
 
 jobs:
   deploy:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-latest]
         node-version: [10.x]
         rust-toolchain: [stable]
-    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
