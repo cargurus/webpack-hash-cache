@@ -31,9 +31,9 @@ jobs:
     - name: clippy
       run: (cd native && cargo clippy -- -D warnings)
     - name: upload binary
-      run: npm upload-binary
-    - name: clean
-      run: npm clean
+      run: npm run upload-binary
+    # - name: clean
+    #   run: npm clean
     - name: publish
       run: npm publish
       env:
