@@ -46,7 +46,8 @@ jobs:
         target: aarch64-apple-darwin
         profile: minimal
         override: true
-    # - run: sudo xcode-select -switch /Library/Developer/CommandLineTools
+    - run: sudo xcode-select --switch /Applications/Xcode-beta.app
+    - run: sudo xcode-select --install
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
