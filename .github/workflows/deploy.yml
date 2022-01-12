@@ -6,20 +6,47 @@ on:
       - master
 
 jobs:
-  deploy:
+#   deploy:
+#     runs-on: ${{ matrix.os }}
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest, macos-11]
+#         node-version: [12.x, 14.x, 16.x]
+#         rust-toolchain: [stable]
+#
+#     steps:
+#     - uses: actions/checkout@v2
+#     - name: Use Rust ${{ matrix.rust-toolchain }}
+#       uses: actions-rs/toolchain@v1
+#       with:
+#         toolchain: ${{ matrix.rust-toolchain }}
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#     - name: install
+#       run: yarn install
+#     - name: upload binary
+#       run: yarn run upload-binary
+#       env:
+#         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deployM1:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-11]
+        os: [macos-11]
         node-version: [12.x, 14.x, 16.x]
         rust-toolchain: [stable]
 
     steps:
     - uses: actions/checkout@v2
     - name: Use Rust ${{ matrix.rust-toolchain }}
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: ${{ matrix.rust-toolchain }}
+        - uses: actions-rs/toolchain@v1
+          with:
+            toolchain: stable
+            target: aarch64-apple-darwin
+            profile: minimal
+            override: true
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -30,13 +57,6 @@ jobs:
       run: yarn run upload-binary
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: beta
-        target: aarch64-apple-darwin
-        profile: minimal
-        override: true
 
     - name: upload mac arm binary
       if: ${{ matrix.os == 'macos-11'}}
