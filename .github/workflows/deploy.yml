@@ -46,18 +46,17 @@ jobs:
         target: aarch64-apple-darwin
         profile: minimal
         override: true
+    - run: xcode-select --switch /Applications/Xcode.app
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: install
       run: yarn install
-    - name: Set SDKROOT
-      run: echo "SDKROOT=$(xcrun -sdk macosx11.1 --show-sdk-path)" >> $GITHUB_ENV
-    - name: Set MACOSX_DEPLOYMENT_TARGET
-      run: echo "MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx11.1 --show-sdk-platform-version)" >> $GITHUB_ENV
     - name: upload mac arm binary
       run: yarn run upload-binary
       env:
+        SDKROOT: $(xcrun -sdk macosx11.1 --show-sdk-path)
+        MACOSX_DEPLOYMENT_TARGET: $(xcrun -sdk macosx11.1 --show-sdk-platform-version)
         CARGO_BUILD_TARGET: aarch64-apple-darwin
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
