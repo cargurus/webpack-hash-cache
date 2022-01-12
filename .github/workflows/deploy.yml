@@ -38,10 +38,6 @@ jobs:
         node-version: [12.x, 14.x, 16.x]
         rust-toolchain: [stable]
     steps:
-    - name: Cache multiple paths
-    uses: actions/cache@v2
-    with:
-      key: ${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1
       with:
