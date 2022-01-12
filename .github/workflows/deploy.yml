@@ -54,8 +54,8 @@ jobs:
       run: yarn install
     # - run: sudo xcode-select -s "/Applications/Xcode_12.4.app"
     # - run: sudo rm -Rf /Library/Developer/CommandLineTools/SDKs/*
-    # - name: Set SDKROOT
-    #   run: echo "SDKROOT=$(xcrun -sdk macosx11.1 --show-sdk-path)" >> $GITHUB_ENV
+    - name: Set SDKROOT
+      run: echo "SDKROOT=$(xcrun -sdk macosx12.1 --show-sdk-path)" >> $GITHUB_ENV
     # - name: Set MACOSX_DEPLOYMENT_TARGET
     #   run: echo "MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx11.1 --show-sdk-platform-version)" >> $GITHUB_ENV
     - name: upload mac arm binary
