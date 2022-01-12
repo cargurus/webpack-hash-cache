@@ -1,6 +1,6 @@
 {
   "name": "webpack-hash-cache",
-  "version": "0.4.6-alpha-16",
+  "version": "0.4.6-alpha-17",
   "description": "An experimental incremental build plugin for Webpack.",
   "main": "lib/index.js",
   "author": "cfruit <cfruit@cargurus.com>",
@@ -33,7 +33,7 @@
     "module_name": "index",
     "host": "https://github.com/cargurus/webpack-hash-cache/releases/download/",
     "remote_path": "{version}",
-    "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
+    "package_name": "v73-darwin-x64.tar.gz",
     "module_path": "./native",
     "pkg_path": "."
   },
