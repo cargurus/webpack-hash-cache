@@ -51,6 +51,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: install
       run: yarn install
+    - run: sudo xcode-select --switch /Applications/Xcode_12.4.app
     - name: Set SDKROOT
       run: echo "SDKROOT=$(xcrun -sdk macosx11.1 --show-sdk-path)" >> $GITHUB_ENV
     - name: Set MACOSX_DEPLOYMENT_TARGET
