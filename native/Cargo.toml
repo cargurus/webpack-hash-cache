@@ -18,6 +18,5 @@ features = ["napi-4"]
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-fasthash = "0.4"
 rayon = "1.1"
 neon-serde3 = { git = "https://github.com/colinfruit/neon-serde", branch = "master" }
