@@ -49,6 +49,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: (cd native && cargo clean)
     - name: install
       run: yarn install
     - run: sudo xcode-select -s "/Applications/Xcode_12.4.app"
