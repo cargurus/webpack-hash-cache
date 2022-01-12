@@ -25,9 +25,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: install
-      run: yarn install
+      run: npm install
     - name: upload binary
-      run: yarn run upload-binary
+      run: npm run upload-binary
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deployM1:
@@ -51,9 +51,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: (cd native && cargo clean)
     - name: install
-      run: yarn install
+      run: npm install
     - name: upload mac arm binary
-      run: yarn run upload-arm-binary
+      run: npm run upload-arm-binary
       env:
         CARGO_BUILD_TARGET: aarch64-apple-darwin
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
