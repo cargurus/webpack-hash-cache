@@ -38,14 +38,14 @@ jobs:
         node-version: [12.x, 14.x, 16.x]
         rust-toolchain: [stable]
     steps:
-    # - uses: actions/checkout@v2
-    # - name: Use Rust ${{ matrix.rust-toolchain }}
-    # - uses: actions-rs/toolchain@v1
-    #   with:
-    #     toolchain: ${{ matrix.rust-toolchain }}
-    #     target: aarch64-apple-darwin
-    #     profile: minimal
-    #     override: true
+    - uses: actions/checkout@v2
+    - name: Use Rust ${{ matrix.rust-toolchain }}
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust-toolchain }}
+        target: aarch64-apple-darwin
+        profile: minimal
+        override: true
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
