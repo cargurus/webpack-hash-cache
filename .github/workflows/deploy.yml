@@ -41,9 +41,6 @@ jobs:
     - name: Cache multiple paths
     uses: actions/cache@v2
     with:
-      path: |
-        ~/cache
-        !~/cache/exclude
       key: ${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1
