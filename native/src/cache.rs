@@ -6,8 +6,6 @@ use std::time::SystemTime;
 use std::io;
 
 use std::path::Path;
-use fasthash::MetroHasher;
-
 
 #[derive(Serialize, Deserialize)]
 pub struct CachedEntry {
@@ -90,7 +88,7 @@ impl CachedFile {
 }
 
 fn calculate_hash<T: Hash>(t: &T) -> u64 {
-    let mut s = MetroHasher::default();
+    let mut s = Hasher::default();
     t.hash(&mut s);
     s.finish()
 }
