@@ -35,10 +35,12 @@ jobs:
     strategy:
       matrix:
         os: [macos-11]
+        include:
+        - os: macos-11
+          additional-rust-target: aarch64-apple-darwin
         node-version: [12.x, 14.x, 16.x]
         rust-toolchain: [stable]
     steps:
-    - run: sudo xcode-select --reset
     - uses: actions/checkout@v2
     - name: Use Rust ${{ matrix.rust-toolchain }}
       uses: actions-rs/toolchain@v1
@@ -56,5 +58,7 @@ jobs:
     - name: upload mac arm binary
       run: yarn run upload-binary
       env:
+        SDKROOT: $(xcrun -sdk macosx11.1 --show-sdk-path)
+        MACOSX_DEPLOYMENT_TARGET: $(xcrun -sdk macosx11.1 --show-sdk-platform-version)
         CARGO_BUILD_TARGET: aarch64-apple-darwin
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
