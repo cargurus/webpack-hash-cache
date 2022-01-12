@@ -34,7 +34,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11]
+        os: [macos-10.15]
         node-version: [12.x, 14.x, 16.x]
         rust-toolchain: [stable]
     steps:
@@ -42,24 +42,24 @@ jobs:
     - name: Use Rust ${{ matrix.rust-toolchain }}
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: ${{ matrix.rust-toolchain }}
-        target: aarch64-apple-darwin
         profile: minimal
+        toolchain: 1.55.0
+        target: aarch64-apple-darwin
         override: true
-    - run: sudo xcode-select --switch /Applications/Xcode-beta.app
-    - run: sudo xcode-select --install
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: install
       run: yarn install
-    - run: echo "$(xcodebuild -showsdks)"
-    - run: echo "$(xcrun -sdk macosx11.1 --show-sdk-path)"
+   - name: Set SDKROOT
+      run: echo "SDKROOT=$(xcrun -sdk macosx11.1 --show-sdk-path)" >> $GITHUB_ENV
+    - name: Set MACOSX_DEPLOYMENT_TARGET
+      run: echo "MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx11.1 --show-sdk-platform-version)" >> $GITHUB_ENV
     - name: upload mac arm binary
       run: yarn run upload-binary
       env:
-        SDKROOT: $(xcrun -sdk macosx --show-sdk-path)
-        MACOSX_DEPLOYMENT_TARGET: $(xcrun -sdk macosx --show-sdk-platform-version)
+        SDKROOT: $(xcrun -sdk macosx11.1 --show-sdk-path)
+        MACOSX_DEPLOYMENT_TARGET: $(xcrun -sdk macosx11.1 --show-sdk-platform-version)
         CARGO_BUILD_TARGET: aarch64-apple-darwin
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

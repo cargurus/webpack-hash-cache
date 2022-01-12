@@ -10,9 +10,6 @@ exclude = ["artifacts.json", "index.node"]
 name = "hash_cache_rs"
 crate-type = ["cdylib"]
 
-[build]
-rustflags = ["-C", "target-feature=-crt-static"]
-
 [dependencies.neon]
 version = "0.9.1"
 default-features = false
