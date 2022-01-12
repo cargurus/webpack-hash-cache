@@ -30,4 +30,30 @@ jobs:
       run: yarn run upload-binary
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+  deployM1:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-11]
+        node-version: [12.x, 14.x, 16.x]
+        rust-toolchain: [stable]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: ${{ matrix.rust-toolchain }}
+        target: aarch64-apple-darwin
+        override: true
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: (cd native && cargo clean)
+    - name: install
+      run: yarn install
+    - name: upload mac arm binary
+      run: yarn run upload-arm-binary
+      env:
+        CARGO_BUILD_TARGET: aarch64-apple-darwin
+        NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,13 +1,12 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::fs;
 use std::time::SystemTime;
 use std::io;
 
 use std::path::Path;
-use fasthash::MetroHasher;
-
 
 #[derive(Serialize, Deserialize)]
 pub struct CachedEntry {
@@ -90,7 +89,7 @@ impl CachedFile {
 }
 
 fn calculate_hash<T: Hash>(t: &T) -> u64 {
-    let mut s = MetroHasher::default();
+    let mut s = DefaultHasher::new();
     t.hash(&mut s);
     s.finish()
 }
