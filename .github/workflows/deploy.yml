@@ -30,9 +30,13 @@ jobs:
       run: yarn run upload-binary
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: install mac arm toolchain
-      if: ${{ matrix.os == 'macos-11'}}
-      run: rustup target add aarch64-apple-darwin
+
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: beta
+        target: aarch64-apple-darwin
+        profile: minimal
+        override: true
 
     - name: upload mac arm binary
       if: ${{ matrix.os == 'macos-11'}}
