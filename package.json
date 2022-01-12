@@ -22,9 +22,9 @@
   "scripts": {
     "build-release": "neon build --release",
     "clean": "neon clean",
-    "install": "neon build --release",
+    "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "lint": "eslint .",
-    "package": "node-pre-gyp package --target_arch=arm",
+    "package": "node-pre-gyp --target_arch=arm package",
     "test": "exit 0",
     "upload-binary": "yarn build-release && node-pre-gyp package && node-pre-gyp-github publish --release"
   },
