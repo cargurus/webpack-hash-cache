@@ -31,6 +31,13 @@ jobs:
 #       env:
 #         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy:
+    - name: Cache multiple paths
+    uses: actions/cache@v2
+    with:
+      path: |
+        ~/cache
+        !~/cache/exclude
+      key: ${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
