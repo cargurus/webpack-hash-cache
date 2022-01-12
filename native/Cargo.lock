@@ -168,7 +168,6 @@ version = "0.1.0"
 dependencies = [
  "fasthash",
  "neon",
- "neon-build",
  "neon-serde3",
  "rayon",
  "serde",
