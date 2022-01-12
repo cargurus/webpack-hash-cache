@@ -51,9 +51,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: install
-      run: yarn install
-    - run: echo "xcodebuild -showsdks"
+    # - name: install
+    #   run: yarn install
+    - run: echo "$(xcodebuild -showsdks)"
     # - name: upload mac arm binary
     #   run: yarn run upload-binary
     #   env:
