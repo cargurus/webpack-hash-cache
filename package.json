@@ -24,9 +24,9 @@
     "clean": "neon clean",
     "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "lint": "eslint .",
-    "package": "node-pre-gyp --target_arch=arm package",
+    "package": "node-pre-gyp package",
     "test": "exit 0",
-    "upload-binary": "yarn build-release && node-pre-gyp package && node-pre-gyp-github publish --release"
+    "upload-binary": "yarn build-release && node-pre-gyp --target_arch=arm package && node-pre-gyp-github publish --release"
   },
   "binary": {
     "module_name": "index",
