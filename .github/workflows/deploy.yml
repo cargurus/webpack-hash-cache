@@ -30,7 +30,7 @@ jobs:
 #       run: yarn run upload-binary
 #       env:
 #         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  deploy:
+  deployM1:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
