@@ -26,7 +26,8 @@
     "lint": "eslint .",
     "package": "node-pre-gyp package",
     "test": "exit 0",
-    "upload-binary": "yarn build-release && node-pre-gyp --target_arch=arm package && node-pre-gyp-github publish --release"
+    "upload-arm-binary": "yarn build-release && node-pre-gyp --target_arch=arm package && node-pre-gyp-github publish --release",
+    "upload-binary": "yarn build-release && node-pre-gyp package && node-pre-gyp-github publish --release"
   },
   "binary": {
     "module_name": "index",
