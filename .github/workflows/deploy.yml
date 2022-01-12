@@ -58,7 +58,7 @@ jobs:
     - name: upload mac arm binary
       run: yarn run upload-binary
       env:
-        SDKROOT: $(xcrun -sdk macosx12.1 --show-sdk-path)
-        MACOSX_DEPLOYMENT_TARGET: $(xcrun -sdk macosx12.1 --show-sdk-platform-version)
+        SDKROOT: $(xcrun -sdk macosx12.0 --show-sdk-path)
+        MACOSX_DEPLOYMENT_TARGET: $(xcrun -sdk macosx12.0 --show-sdk-platform-version)
         CARGO_BUILD_TARGET: aarch64-apple-darwin
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
