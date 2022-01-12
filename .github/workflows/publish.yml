@@ -10,8 +10,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        node-version: [16.x]
+        os: [macos-latest]
+        node-version: [12.x]
         rust-toolchain: [stable]
 
     steps:
