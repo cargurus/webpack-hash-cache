@@ -38,7 +38,7 @@ jobs:
         node-version: [12.x, 14.x, 16.x]
         rust-toolchain: [stable]
     steps:
-    - run: xcode-select --install
+    - run: sudo xcode-select --reset
     - uses: actions/checkout@v2
     - name: Use Rust ${{ matrix.rust-toolchain }}
       uses: actions-rs/toolchain@v1
