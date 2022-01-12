@@ -10,7 +10,7 @@ jobs:
 #     runs-on: ${{ matrix.os }}
 #     strategy:
 #       matrix:
-#         os: [ubuntu-latest, macos-10.15]
+#         os: [ubuntu-latest, macos-11]
 #         node-version: [12.x, 14.x, 16.x]
 #         rust-toolchain: [stable]
 #
@@ -34,7 +34,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-10.15]
+        os: [macos-11]
         node-version: [12.x, 14.x, 16.x]
         rust-toolchain: [stable]
     steps:
