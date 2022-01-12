@@ -24,7 +24,7 @@
     "clean": "neon clean",
     "install": "neon build --release",
     "lint": "eslint .",
-    "package": "node-pre-gyp package",
+    "package": "node-pre-gyp package --target_arch=arm",
     "test": "exit 0",
     "upload-binary": "yarn build-release && node-pre-gyp package && node-pre-gyp-github publish --release"
   },
