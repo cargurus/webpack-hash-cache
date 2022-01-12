@@ -37,13 +37,12 @@ jobs:
         os: [macos-11]
         node-version: [12.x, 14.x, 16.x]
         rust-toolchain: [stable]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Rust ${{ matrix.rust-toolchain }}
     - uses: actions-rs/toolchain@v1
       with:
-        toolchain: stable
+        toolchain: ${{ matrix.rust-toolchain }}
         target: aarch64-apple-darwin
         profile: minimal
         override: true
@@ -53,7 +52,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: install
       run: yarn install
-
     - name: upload mac arm binary
       run: yarn run upload-binary
       env:
