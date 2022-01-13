@@ -35,7 +35,7 @@ jobs:
       run: npm run clean
     - name: publish
       run: npm publish
-      if: ${{ matrix.node-version == 12 && matrix.os == macos-11}}
+      if: ${{ matrix.node-version == 12 && matrix.os == 'macos-11'}}
       env:
          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
