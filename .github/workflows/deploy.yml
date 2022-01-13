@@ -30,6 +30,13 @@ jobs:
       run: npm run upload-binary
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: clean
+      run: npm run clean
+    - name: publish
+      run: npm publish
+      with:
+         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   deployM1:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -57,3 +64,9 @@ jobs:
       env:
         CARGO_BUILD_TARGET: aarch64-apple-darwin
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: clean
+      run: npm run clean
+    - name: publish
+      run: npm publish
+      with:
+         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
