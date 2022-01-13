@@ -1,6 +1,6 @@
 {
   "name": "webpack-hash-cache",
-  "version": "0.4.6-alpha-19",
+  "version": "0.4.6-alpha-20",
   "description": "An experimental incremental build plugin for Webpack.",
   "main": "lib/index.js",
   "author": "cfruit <cfruit@cargurus.com>",
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "neon-cli": "^0.9.1",
-    "@mapbox/node-pre-gyp": "1.0.8",
-    "@mmomtchev/node-pre-gyp-github": "2.0.6",
+    "node-pre-gyp": "^0.17.0",
+    "node-pre-gyp-github": "^1.4.3",
     "util": "^0.12.3"
   },
   "scripts": {
