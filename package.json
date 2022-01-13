@@ -16,7 +16,7 @@
   "dependencies": {
     "neon-cli": "^0.9.1",
     "node-pre-gyp": "^0.17.0",
-    "@mmomtchev/node-pre-gyp-github": "2.0.6",,
+    "@mmomtchev/node-pre-gyp-github": "2.0.6",
     "util": "^0.12.3"
   },
   "scripts": {
