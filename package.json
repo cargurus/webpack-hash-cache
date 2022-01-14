@@ -1,48 +1,40 @@
 {
   "name": "webpack-hash-cache",
-  "version": "0.4.6-alpha-14",
+  "version": "0.4.6-beta-1",
   "description": "An experimental incremental build plugin for Webpack.",
   "main": "lib/index.js",
   "author": "cfruit <cfruit@cargurus.com>",
   "license": "MIT",
-  "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+  "napi": {
+    "name": "webpack-hash-cache",
+    "triples": {
+      "defaults": false,
+      "additional": [
+        "aarch64-apple-darwin",
+        "x86_64-apple-darwin",
+        "x86_64-unknown-linux-gnu"
+      ]
+    }
   },
   "dependencies": {
-    "neon-cli": "^0.9.1",
-    "@mapbox/node-pre-gyp": "1.0.8",
-    "@mmomtchev/node-pre-gyp-github": "2.0.6",
     "util": "^0.12.3"
   },
-  "scripts": {
-    "build-release": "neon build --release",
-    "clean": "neon clean",
-    "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
-    "lint": "eslint .",
-    "package": "node-pre-gyp package",
-    "test": "exit 0",
-    "upload-arm-binary": "yarn build-release && node-pre-gyp --target_arch=arm package && node-pre-gyp-github publish --release",
-    "upload-binary": "yarn build-release && node-pre-gyp package && node-pre-gyp-github publish --release"
+  "devDependencies": {
+    "@napi-rs/cli": "^2.4.0"
   },
-  "binary": {
-    "module_name": "index",
-    "host": "https://github.com/cargurus/webpack-hash-cache/releases/download/",
-    "remote_path": "{version}",
-    "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
-    "module_path": "./native",
-    "pkg_path": "."
+  "engines": {
+    "node": ">= 12"
+  },
+  "scripts": {
+    "artifacts": "napi artifacts",
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "test": "exit 0",
+    "prepublishOnly": "napi prepublish -t npm",
+    "version": "napi version"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cargurus/webpack-hash-cache.git"
-  },
-  "files": [
-    "native/index.node",
-    "lib"
-  ]
+  }
 }
