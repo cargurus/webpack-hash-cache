@@ -1,5 +1,5 @@
 {
-  "name": "webpack-cache-darwin-arm64",
+  "name": "webpack-hash-cache-darwin-arm64",
   "version": "0.0.0",
   "os": [
     "darwin"
@@ -7,9 +7,9 @@
   "cpu": [
     "arm64"
   ],
-  "main": "webpack-cache.darwin-arm64.node",
+  "main": "webpack-hash-cache.darwin-arm64.node",
   "files": [
-    "webpack-cache.darwin-arm64.node"
+    "webpack-hash-cache.darwin-arm64.node"
   ],
   "license": "MIT",
   "engines": {
