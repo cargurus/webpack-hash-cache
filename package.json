@@ -7,7 +7,14 @@
   "license": "MIT",
   "napi": {
     "name": "webpack-hash-cache",
-    "triples": {}
+    "triples": {
+      "defaults": false,
+      "additional": [
+        "aarch64-apple-darwin",
+        "x86_64-apple-darwin",
+        "x86_64-unknown-linux-gnu"
+      ]
+    }
   },
   "dependencies": {
     "util": "^0.12.3"
