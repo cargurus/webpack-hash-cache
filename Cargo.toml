@@ -1,6 +1,6 @@
 [package]
 edition = "2021"
-name = "webpack-hash-cache-napi"
+name = "webpack-hash-cache"
 version = "0.0.0"
 
 [lib]

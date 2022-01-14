@@ -6,7 +6,7 @@
   "author": "cfruit <cfruit@cargurus.com>",
   "license": "MIT",
   "napi": {
-    "name": "webpack-hash-cache-napi",
+    "name": "webpack-hash-cache",
     "triples": {}
   },
   "dependencies": {

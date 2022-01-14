@@ -1,5 +1,5 @@
 {
-  "name": "webpack-hash-cache-napi-win32-x64-msvc",
+  "name": "webpack-hash-cache-win32-x64-msvc",
   "version": "0.0.0",
   "os": [
     "win32"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "webpack-hash-cache-napi.win32-x64-msvc.node",
+  "main": "webpack-hash-cache.win32-x64-msvc.node",
   "files": [
-    "webpack-hash-cache-napi.win32-x64-msvc.node"
+    "webpack-hash-cache.win32-x64-msvc.node"
   ],
   "license": "MIT",
   "engines": {

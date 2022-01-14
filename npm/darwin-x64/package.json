@@ -1,5 +1,5 @@
 {
-  "name": "webpack-hash-cache-napi-darwin-x64",
+  "name": "webpack-hash-cache-darwin-x64",
   "version": "0.0.0",
   "os": [
     "darwin"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "webpack-hash-cache-napi.darwin-x64.node",
+  "main": "webpack-hash-cache.darwin-x64.node",
   "files": [
-    "webpack-hash-cache-napi.darwin-x64.node"
+    "webpack-hash-cache.darwin-x64.node"
   ],
   "license": "MIT",
   "engines": {

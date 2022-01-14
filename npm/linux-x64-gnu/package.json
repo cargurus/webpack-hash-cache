@@ -1,5 +1,5 @@
 {
-  "name": "webpack-hash-cache-napi-linux-x64-gnu",
+  "name": "webpack-hash-cache-linux-x64-gnu",
   "version": "0.0.0",
   "os": [
     "linux"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "webpack-hash-cache-napi.linux-x64-gnu.node",
+  "main": "webpack-hash-cache.linux-x64-gnu.node",
   "files": [
-    "webpack-hash-cache-napi.linux-x64-gnu.node"
+    "webpack-hash-cache.linux-x64-gnu.node"
   ],
   "license": "MIT",
   "engines": {
