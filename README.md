@@ -4,7 +4,7 @@ An experimental incremental build plugin for Webpack.
 
 Incremental builds increase the speed of the development workflow by avoiding rebuilding unchanged entries. However, in large projects, the caching process can be expensive. HashCachePlugin uses Rust for resource-intensive caching, which accelerates the caching process.
 
-Built with [Neon](https://github.com/neon-bindings/neon)!
+Built with [napi-rs](https://github.com/napi-rs/napi-rs)!
 
 ## Installation
 
