@@ -22,12 +22,12 @@ pub struct Entries {
     pub files: Vec<String>,
 }
 
-struct AsyncFib {
+struct AsyncCache {
   cache_dir: String,
   entries: Vec<Entries>,
 }
 
-impl Task for AsyncFib {
+impl Task for AsyncCache {
     type Output = u32;
     type JsValue = JsNumber;
     fn compute(&mut self) -> napi::Result<Self::Output> {
@@ -109,6 +109,6 @@ fn get_unchanged_entries(cache_dir: String) -> napi::Result<Vec<String>> {
 
 // so JS can call it asynchronously
 #[napi]
-fn cache_entries(cache_dir: String, entries: Vec<Entries>) -> AsyncTask<AsyncFib> {
-    AsyncTask::new(AsyncFib { cache_dir, entries })
+fn cache_entries(cache_dir: String, entries: Vec<Entries>) -> AsyncTask<AsyncCache> {
+    AsyncTask::new(AsyncCache { cache_dir, entries })
 }
