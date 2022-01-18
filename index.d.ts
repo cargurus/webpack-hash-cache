@@ -14,4 +14,4 @@ export interface Entries {
   files: Array<string>
 }
 export function getUnchangedEntries(cacheDir: string): Array<string>
-export function cacheEntries(cacheDir: string, entries: Array<Entries>): void
+export function cacheEntries(cacheDir: string, entries: Array<Entries>): Promise<unknown>

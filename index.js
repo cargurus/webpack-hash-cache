@@ -26,10 +26,10 @@ switch (platform) {
     if (arch !== 'arm64') {
       throw new Error(`Unsupported architecture on Android ${arch}`)
     }
-    localFileExisted = existsSync(join(__dirname, 'webpack-hash-cache-napi.android-arm64.node'))
+    localFileExisted = existsSync(join(__dirname, 'webpack-hash-cache.android-arm64.node'))
     try {
       if (localFileExisted) {
-        nativeBinding = require('./webpack-hash-cache-napi.android-arm64.node')
+        nativeBinding = require('./webpack-hash-cache.android-arm64.node')
       } else {
         nativeBinding = require('webpack-hash-cache-android-arm64')
       }
@@ -41,11 +41,11 @@ switch (platform) {
     switch (arch) {
       case 'x64':
         localFileExisted = existsSync(
-          join(__dirname, 'webpack-hash-cache-napi.win32-x64-msvc.node')
+          join(__dirname, 'webpack-hash-cache.win32-x64-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./webpack-hash-cache-napi.win32-x64-msvc.node')
+            nativeBinding = require('./webpack-hash-cache.win32-x64-msvc.node')
           } else {
             nativeBinding = require('webpack-hash-cache-win32-x64-msvc')
           }
@@ -55,11 +55,11 @@ switch (platform) {
         break
       case 'ia32':
         localFileExisted = existsSync(
-          join(__dirname, 'webpack-hash-cache-napi.win32-ia32-msvc.node')
+          join(__dirname, 'webpack-hash-cache.win32-ia32-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./webpack-hash-cache-napi.win32-ia32-msvc.node')
+            nativeBinding = require('./webpack-hash-cache.win32-ia32-msvc.node')
           } else {
             nativeBinding = require('webpack-hash-cache-win32-ia32-msvc')
           }
@@ -69,11 +69,11 @@ switch (platform) {
         break
       case 'arm64':
         localFileExisted = existsSync(
-          join(__dirname, 'webpack-hash-cache-napi.win32-arm64-msvc.node')
+          join(__dirname, 'webpack-hash-cache.win32-arm64-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./webpack-hash-cache-napi.win32-arm64-msvc.node')
+            nativeBinding = require('./webpack-hash-cache.win32-arm64-msvc.node')
           } else {
             nativeBinding = require('webpack-hash-cache-win32-arm64-msvc')
           }
@@ -88,10 +88,10 @@ switch (platform) {
   case 'darwin':
     switch (arch) {
       case 'x64':
-        localFileExisted = existsSync(join(__dirname, 'webpack-hash-cache-napi.darwin-x64.node'))
+        localFileExisted = existsSync(join(__dirname, 'webpack-hash-cache.darwin-x64.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./webpack-hash-cache-napi.darwin-x64.node')
+            nativeBinding = require('./webpack-hash-cache.darwin-x64.node')
           } else {
             nativeBinding = require('webpack-hash-cache-darwin-x64')
           }
@@ -101,11 +101,11 @@ switch (platform) {
         break
       case 'arm64':
         localFileExisted = existsSync(
-          join(__dirname, 'webpack-hash-cache-napi.darwin-arm64.node')
+          join(__dirname, 'webpack-hash-cache.darwin-arm64.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./webpack-hash-cache-napi.darwin-arm64.node')
+            nativeBinding = require('./webpack-hash-cache.darwin-arm64.node')
           } else {
             nativeBinding = require('webpack-hash-cache-darwin-arm64')
           }
@@ -121,10 +121,10 @@ switch (platform) {
     if (arch !== 'x64') {
       throw new Error(`Unsupported architecture on FreeBSD: ${arch}`)
     }
-    localFileExisted = existsSync(join(__dirname, 'webpack-hash-cache-napi.freebsd-x64.node'))
+    localFileExisted = existsSync(join(__dirname, 'webpack-hash-cache.freebsd-x64.node'))
     try {
       if (localFileExisted) {
-        nativeBinding = require('./webpack-hash-cache-napi.freebsd-x64.node')
+        nativeBinding = require('./webpack-hash-cache.freebsd-x64.node')
       } else {
         nativeBinding = require('webpack-hash-cache-freebsd-x64')
       }
@@ -137,11 +137,11 @@ switch (platform) {
       case 'x64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'webpack-hash-cache-napi.linux-x64-musl.node')
+            join(__dirname, 'webpack-hash-cache.linux-x64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./webpack-hash-cache-napi.linux-x64-musl.node')
+              nativeBinding = require('./webpack-hash-cache.linux-x64-musl.node')
             } else {
               nativeBinding = require('webpack-hash-cache-linux-x64-musl')
             }
@@ -150,11 +150,11 @@ switch (platform) {
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'webpack-hash-cache-napi.linux-x64-gnu.node')
+            join(__dirname, 'webpack-hash-cache.linux-x64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./webpack-hash-cache-napi.linux-x64-gnu.node')
+              nativeBinding = require('./webpack-hash-cache.linux-x64-gnu.node')
             } else {
               nativeBinding = require('webpack-hash-cache-linux-x64-gnu')
             }
@@ -166,11 +166,11 @@ switch (platform) {
       case 'arm64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'webpack-hash-cache-napi.linux-arm64-musl.node')
+            join(__dirname, 'webpack-hash-cache.linux-arm64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./webpack-hash-cache-napi.linux-arm64-musl.node')
+              nativeBinding = require('./webpack-hash-cache.linux-arm64-musl.node')
             } else {
               nativeBinding = require('webpack-hash-cache-linux-arm64-musl')
             }
@@ -179,11 +179,11 @@ switch (platform) {
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'webpack-hash-cache-napi.linux-arm64-gnu.node')
+            join(__dirname, 'webpack-hash-cache.linux-arm64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./webpack-hash-cache-napi.linux-arm64-gnu.node')
+              nativeBinding = require('./webpack-hash-cache.linux-arm64-gnu.node')
             } else {
               nativeBinding = require('webpack-hash-cache-linux-arm64-gnu')
             }
@@ -194,11 +194,11 @@ switch (platform) {
         break
       case 'arm':
         localFileExisted = existsSync(
-          join(__dirname, 'webpack-hash-cache-napi.linux-arm-gnueabihf.node')
+          join(__dirname, 'webpack-hash-cache.linux-arm-gnueabihf.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./webpack-hash-cache-napi.linux-arm-gnueabihf.node')
+            nativeBinding = require('./webpack-hash-cache.linux-arm-gnueabihf.node')
           } else {
             nativeBinding = require('webpack-hash-cache-linux-arm-gnueabihf')
           }

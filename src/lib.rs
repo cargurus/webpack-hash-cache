@@ -9,6 +9,9 @@ use std::io;
 use std::path::Path;
 use rayon::prelude::*;
 
+use napi::{Task, Env, JsNumber};
+use napi::bindgen_prelude::AsyncTask;
+
 use cache::{CachedEntry, CachedFile};
 
 mod cache;
@@ -16,7 +19,46 @@ mod cache;
 #[napi(object)]
 pub struct Entries {
     pub name: String,
-    pub files: Vec<String>
+    pub files: Vec<String>,
+}
+
+struct AsyncFib {
+  cache_dir: String,
+  entries: Vec<Entries>,
+}
+
+impl Task for AsyncFib {
+    type Output = u32;
+    type JsValue = JsNumber;
+    fn compute(&mut self) -> napi::Result<Self::Output> {
+        let cached_entries: Vec<CachedEntry> = self.entries
+            .par_iter()
+            .map(|entry| {
+                let cached_files: HashSet<CachedFile> = entry
+                    .files
+                    .par_iter()
+                    .map(|filename| CachedFile::from_filename(filename))
+                    .filter_map(Result::ok)
+                    .collect();
+                CachedEntry::new(entry.name.to_string(), cached_files)
+            })
+            .collect();
+
+        // ensure directory exists.
+        fs::create_dir_all(&self.cache_dir)
+            .unwrap_or_else(|_| panic!("Error creating cache directory: {}", self.cache_dir));
+
+        for cached_entry in cached_entries.iter() {
+            cached_entry
+                .write(&self.cache_dir)
+                .unwrap_or_else(|_| panic!("Error writing cache file for: {}", cached_entry.name));
+        }
+        Ok(0)
+      }
+
+      fn resolve(&mut self, env: Env, output: u32) -> napi::Result<Self::JsValue> {
+          env.create_uint32(output)
+      }
 }
 
 fn walk_dir(cache_dir_path: &Path) -> io::Result<(HashSet<String>, HashSet<String>)> {
@@ -46,7 +88,7 @@ fn walk_dir(cache_dir_path: &Path) -> io::Result<(HashSet<String>, HashSet<Strin
 }
 
 #[napi]
-fn get_unchanged_entries(cache_dir: String) -> Result<Vec<String>, napi::Error> {
+fn get_unchanged_entries(cache_dir: String) -> napi::Result<Vec<String>> {
     // parse JS args
     // let cache_dir: String = cx.argument::<JsString>(0)?.value(&mut cx);
     let cache_dir_path = Path::new(&cache_dir);
@@ -67,28 +109,6 @@ fn get_unchanged_entries(cache_dir: String) -> Result<Vec<String>, napi::Error> 
 
 // so JS can call it asynchronously
 #[napi]
-fn cache_entries(cache_dir: String, entries: Vec<Entries>) -> Result<(), napi::Error> {
-    let cached_entries: Vec<CachedEntry> = entries
-        .par_iter()
-        .map(|entry| {
-            let cached_files: HashSet<CachedFile> = entry
-                .files
-                .par_iter()
-                .map(|filename| CachedFile::from_filename(filename))
-                .filter_map(Result::ok)
-                .collect();
-            CachedEntry::new(entry.name.to_string(), cached_files)
-        })
-        .collect();
-
-    // ensure directory exists.
-    fs::create_dir_all(&cache_dir)
-        .unwrap_or_else(|_| panic!("Error creating cache directory: {}", cache_dir));
-
-    for cached_entry in cached_entries.iter() {
-        cached_entry
-            .write(&cache_dir)
-            .unwrap_or_else(|_| panic!("Error writing cache file for: {}", cached_entry.name));
-    }
-    Ok(())
+fn cache_entries(cache_dir: String, entries: Vec<Entries>) -> AsyncTask<AsyncFib> {
+    AsyncTask::new(AsyncFib { cache_dir, entries })
 }
