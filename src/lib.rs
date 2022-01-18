@@ -9,7 +9,7 @@ use std::io;
 use std::path::Path;
 use rayon::prelude::*;
 
-use napi::{Task, Env, JsNumber};
+use napi::{Task, Env, JsNumber, Error};
 use napi::bindgen_prelude::AsyncTask;
 
 use cache::{CachedEntry, CachedFile};
@@ -57,7 +57,12 @@ impl Task for AsyncCache {
       }
 
       fn resolve(&mut self, env: Env, output: u32) -> napi::Result<Self::JsValue> {
-          env.create_uint32(output)
+        env.create_uint32(output)
+      }
+
+      fn reject(&mut self, _env: Env, err: Error) -> napi::Result<Self::JsValue> {
+        // self.data.unref(env)?;
+        Err(err)
       }
 }
 
