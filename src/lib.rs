@@ -95,10 +95,8 @@ fn walk_dir(cache_dir_path: &Path) -> io::Result<(HashSet<String>, HashSet<Strin
 #[napi]
 fn get_unchanged_entries(cache_dir: String) -> napi::Result<Vec<String>> {
     // parse JS args
-    // let cache_dir: String = cx.argument::<JsString>(0)?.value(&mut cx);
     let cache_dir_path = Path::new(&cache_dir);
     // track entries and changed entries, and return the difference.
-
 
     // iterate through all the cached files
     // or return empty array if cache dir doesn't exist
@@ -107,12 +105,9 @@ fn get_unchanged_entries(cache_dir: String) -> napi::Result<Vec<String>> {
     let unchanged_entries: Vec<String> =
         entries.difference(&changed_entries).cloned().collect();
 
-    // Ok(neon_serde3::to_value(&mut cx, &unchanged_entries).unwrap())
-    // TODO: return vec of unchanged_entries
     Ok(unchanged_entries)
 }
 
-// so JS can call it asynchronously
 #[napi]
 fn cache_entries(cache_dir: String, entries: Vec<Entries>) -> AsyncTask<AsyncCache> {
     AsyncTask::new(AsyncCache { cache_dir, entries })
