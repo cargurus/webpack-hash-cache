@@ -1,6 +1,6 @@
 {
   "name": "webpack-hash-cache",
-  "version": "0.4.6-beta-3",
+  "version": "0.4.6",
   "description": "An experimental incremental build plugin for Webpack.",
   "main": "lib/index.js",
   "author": "cfruit <cfruit@cargurus.com>",
@@ -15,9 +15,6 @@
         "x86_64-unknown-linux-gnu"
       ]
     }
-  },
-  "dependencies": {
-    "util": "^0.12.3"
   },
   "devDependencies": {
     "@napi-rs/cli": "^2.4.0"
