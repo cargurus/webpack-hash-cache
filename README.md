@@ -15,12 +15,12 @@ npm install --save-dev webpack-hash-cache
 
 ## Usage
 
-```
+```js
 import { HashCachePlugin } from 'webpack-hash-cache';
 ```
 
 Add instance to the plugins array in webpack config:
-```
+```js
 plugins: [
     new HashCachePlugin()
 ]
