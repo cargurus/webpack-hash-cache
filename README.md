@@ -26,4 +26,4 @@ plugins: [
 ]
 ```
 
-Currently, you must specify a cache directory, either as an environment variable, CACHE_DIR, or as an option passed to plugin constructor.
+Currently, you must specify a cache directory, either as an environment variable (`CACHE_DIR`), or as an option passed to plugin constructor.
