@@ -110,9 +110,10 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
         node:
-          - '12'
-          - '14'
           - '16'
+          - '18'
+          - '20'
+          - '22'
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v2
@@ -147,9 +148,10 @@ jobs:
       fail-fast: false
       matrix:
         node:
-          - '12'
-          - '14'
           - '16'
+          - '18'
+          - '20'
+          - '22'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
